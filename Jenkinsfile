@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Compile and package the application using Maven
-                sh "cd calc && mvn clean install"
+                sh "mvn clean package"
             }
         }
         
