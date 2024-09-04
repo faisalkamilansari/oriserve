@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CLI = 'docker'  // Adjust if using a different Docker client path
-        DOCKER_HUB_CREDENTIALS = 'DockerHub_Cred'  // Replace with your credentials ID
+        DOCKER_HUB_CREDENTIALS = 'DockerHub-Cred'  // Replace with your credentials ID
     }
 
     stages {
@@ -25,10 +25,7 @@ pipeline {
             steps {
                 script{
                 docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
-                        // Build the Docker image
                         sh "docker build -t faisalkamil/oriserve:latest ."
-                        
-                        // Push the Docker image
                         sh "docker push faisalkamil/oriserve:latest"
                     }
                 }
@@ -45,6 +42,21 @@ pipeline {
                 """
             }
         }
+        stage('Deploy to AWS CodeDeploy') {
+            steps {
+                script {
+                    sh """
+                    aws deploy create-deployment \
+                        --application-name oriserve-app \
+                        --deployment-group-name grp-oriserve \
+                        --revision location={s3Location={bucket=your-bucket,key=application-package.zip},type=S3} \
+                        --deployment-config-name CodeDeployDefault.AllAtOnce \
+                        --region us-east-1
+                    """
+                }
+            }
+        }
+
     }
 
     post {
