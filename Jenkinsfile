@@ -30,9 +30,13 @@ pipeline {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
                     // Copy the WAR file and the appspec.yml to the S3 bucket
                     sh """
-                    aws s3 cp target/*.war s3://${S3_BUCKET}/calc.war
-                    aws s3 cp appspec.yml s3://${S3_BUCKET}/appspec.yml
-                    """
+                        zip deployment-package.zip target/*.war appspec.yml scripts/
+                        """
+                        
+                        // Upload the ZIP package to S3
+                        sh """
+                        aws s3 cp deployment-package.zip s3://${S3_BUCKET}/deployment-package.zip
+                        """
                     }
                 }
             }
