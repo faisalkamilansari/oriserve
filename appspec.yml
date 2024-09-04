@@ -5,9 +5,9 @@ files:
     destination: /opt/tomcat/webapps/
 
 hooks:
-  BlockTraffic:
-    - location: scripts/block_traffic.sh
-      timeout: 120  # Set a lower timeout, e.g., 120 seconds
+  # BlockTraffic:
+  #   - location: scripts/block_traffic.sh
+  #     timeout: 120  # Set a lower timeout, e.g., 120 seconds
   BeforeInstall:
     - location: scripts/stop_server.sh
       timeout: 300
