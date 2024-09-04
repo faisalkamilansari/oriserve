@@ -28,7 +28,7 @@ pipeline {
                 sh "sudo docker build -t oriserve_asg ."
                 }
             }
-        }
+    
 
         // stage('Upload to Artifactory') {
         //     steps {
