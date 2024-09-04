@@ -23,6 +23,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
+                script{
                 docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
                         // Build the Docker image
                         sh "docker build -t faisalkamil/oriserve:latest ."
@@ -30,7 +31,7 @@ pipeline {
                         // Push the Docker image
                         sh "docker push faisalkamil/oriserve:latest"
                     }
-                
+                }
                 
                 }
             }
