@@ -50,7 +50,7 @@ pipeline {
                     aws deploy create-deployment \
                     --application-name oriserve-app \
                     --deployment-group-name grp-oriserve \
-                    --revision revisionType=S3,s3Location={bucket=faisals3bucket,key=calc.war,bundleType=zip} \
+                    --s3-location bucket=faisals3bucket,key=deployment-package.zip,bundleType=zip\
                     --deployment-config-name CodeDeployDefault.AllAtOnce \
                     --region us-east-1
                     """
