@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CLI = 'docker'  // Adjust if using a different Docker client path
-        S3_BUCKET='faisals3bucket'
+        S3_BUCKET='faisalkamils3bucket'
         DEPLOY_GROUP = 'grp-oriserve'
         APP_NAME = 'oriserve-app'
         REGION = 'us-east-1'
