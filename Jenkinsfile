@@ -41,14 +41,16 @@ pipeline {
             steps {
                 script {
                     // Create a deployment in AWS CodeDeploy
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
                     sh """
                     aws deploy create-deployment \
-                        --application-name ${APP_NAME} \
-                        --deployment-group-name ${DEPLOY_GROUP} \
-                        --revision revisionType=S3,s3Location={bucket=${S3_BUCKET},key=your-application.war,bundleType=zip} \
-                        --deployment-config-name CodeDeployDefault.AllAtOnce \
-                        --region ${REGION}
+                    --application-name oriserve-app \
+                    --deployment-group-name grp-oriserve \
+                    --revision revisionType=S3,s3Location={bucket=faisals3bucket,key=calc.war,bundleType=zip} \
+                    --deployment-config-name CodeDeployDefault.AllAtOnce \
+                    --region us-east-1
                     """
+                    }
                 }
             }
         }
