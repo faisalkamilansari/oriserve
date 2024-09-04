@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables for Maven, SonarQube, and Artifactory
-        // MAVEN_HOME = tool name: 'Maven 3.8.1', type: 'Maven'
-        SONARQUBE_SERVER = 'SonarQube-Server'  // Replace with your SonarQube server ID
-        ARTIFACTORY_SERVER = 'Artifactory'  // Replace with your Artifactory server ID
+        DOCKER_CLI = 'docker'  // Adjust if using a different Docker client path
+        DOCKER_HUB_CREDENTIALS = 'DockerHub_Cred'  // Replace with your credentials ID
     }
 
     stages {
@@ -25,52 +23,27 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t oriserve_asg ."
+                docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        // Build the Docker image
+                        sh "docker build -t faisalkamil/oriserve:latest ."
+                        
+                        // Push the Docker image
+                        sh "docker push faisalkamil/oriserve:latest"
+                    }
+                
+                
                 }
             }
-    
 
-        // stage('Upload to Artifactory') {
-        //     steps {
-        //         // Upload the packaged application to Artifactory
-        //         script {
-        //             def server = Artifactory.server(ARTIFACTORY_SERVER)
-        //             def uploadSpec = """{
-        //                 "files": [{
-        //                     "pattern": "target/*.war",
-        //                     "target": "libs-release-local/${env.JOB_NAME}/${env.BUILD_NUMBER}/"
-        //                 }]
-        //             }"""
-        //             server.upload(uploadSpec)
-        //         }
-        //Tomcat9     }
-        // }
-
-    //     stage('Deploy to Tomcat') {
-    //         steps {
-    //             // Deploy to the appropriate Tomcat environment based on the input parameter
-    //                 script {
-    //                     def tomcatServiceName = 'Tomcat9'
-    //                     def tomcatDir = 'C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps'
-    //                     def warFile = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Jenkins-tomcat-deployment\\calc\\target\\web-calculator.war"
-    //                     def destFile = "${tomcatDir}\\web-calculator.war"
-
-    //                     bat """
-    //                         if exist "${destFile}" del /q "${destFile}"
-    //                         copy "${warFile}" "${destFile}"
-                            
-    //                         echo Stopping Tomcat service...
-    //                             net stop ${tomcatServiceName}
-
-    //                             echo Waiting for Tomcat to stop...
-    //                             timeout /t 20 /nobreak
-
-    //                             echo Starting Tomcat service...
-    //                             net start ${tomcatServiceName}
-    //                     """
-    //                 }
-    //         }
-    //     }
+        stage('Docker Cleanup') {
+            steps {
+                // Remove old Docker images
+                sh """
+                docker image prune -a -f
+                docker system prune -a -f
+                """
+            }
+        }
     }
 
     post {
