@@ -3,7 +3,11 @@ pipeline {
 
     environment {
         DOCKER_CLI = 'docker'  // Adjust if using a different Docker client path
-        DOCKER_HUB_CREDENTIALS = 'DockerHub-Cred'  // Replace with your credentials ID
+        S3_BUCKET='faisals3bucket'
+        DEPLOY_GROUP = 'grp-oriserve'
+        APP_NAME = 'oriserve-app'
+        REGION = 'us-east-1'
+        AWS_CREDENTIALS = 'aws-credentials'
     }
 
     stages {
@@ -20,38 +24,28 @@ pipeline {
                 sh "mvn clean package"
             }
         }
-        
-        stage('Build Docker Image') {
+        stage('Upload WAR to S3') {
             steps {
-                script{
-                docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
-                        sh "docker build -t faisalkamil/oriserve:latest ."
-                        sh "docker push faisalkamil/oriserve:latest"
-                    }
+                script {
+                    // Copy the WAR file and the appspec.yml to the S3 bucket
+                    sh """
+                    aws s3 cp target/*.war s3://${S3_BUCKET}/calc.war
+                    aws s3 cp appspec.yml s3://${S3_BUCKET}/appspec.yml
+                    """
                 }
-                
-                }
-            }
-
-        stage('Docker Cleanup') {
-            steps {
-                // Remove old Docker images
-                sh """
-                docker image prune -a -f
-                docker system prune -a -f
-                """
             }
         }
         stage('Deploy to AWS CodeDeploy') {
             steps {
                 script {
+                    // Create a deployment in AWS CodeDeploy
                     sh """
                     aws deploy create-deployment \
-                        --application-name oriserve-app \
-                        --deployment-group-name grp-oriserve \
-                        --revision location={s3Location={bucket=your-bucket,key=application-package.zip},type=S3} \
+                        --application-name ${APP_NAME} \
+                        --deployment-group-name ${DEPLOY_GROUP} \
+                        --revision revisionType=S3,s3Location={bucket=${S3_BUCKET},key=your-application.war,bundleType=zip} \
                         --deployment-config-name CodeDeployDefault.AllAtOnce \
-                        --region us-east-1
+                        --region ${REGION}
                     """
                 }
             }

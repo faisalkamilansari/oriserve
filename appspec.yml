@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+files:
+  - source: web-calculator.war
+    destination: /opt/tomcat/webapps
+
+hooks:
+  BeforeInstall:
+    - location: scripts/stop_server.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/start_server.sh
+      timeout: 300
+      runas: root
