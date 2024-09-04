@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /target/web-calculator.war
+  - source: /target/.war
     destination: /opt/tomcat/webapps
 
 hooks:
