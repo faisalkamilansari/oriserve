@@ -27,7 +27,7 @@ pipeline {
         stage('Upload WAR to S3') {
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials-id') {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
                     // Copy the WAR file and the appspec.yml to the S3 bucket
                     sh """
                     aws s3 cp target/*.war s3://${S3_BUCKET}/calc.war
