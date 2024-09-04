@@ -23,14 +23,12 @@ pipeline {
             }
         }
         
-        // stage('Code Analysis') {
-        //     steps {
-        //         // Run SonarQube analysis
-        //         withSonarQubeEnv(SONARQUBE_SERVER) {
-        //             bat "cd calc && mvn sonar:sonar"
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                sh "sudo docker build -t oriserve_asg ."
+                }
+            }
+        }
 
         // stage('Upload to Artifactory') {
         //     steps {
