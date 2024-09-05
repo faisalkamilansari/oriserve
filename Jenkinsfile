@@ -30,7 +30,6 @@ pipeline {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
                     // Copy the WAR file and the appspec.yml to the S3 bucket
                     sh """
-                        mv web-calculator.war ROOT.war
                         zip deployment-package.zip target/*.war appspec.yml scripts/start_server.sh scripts/stop_server.sh scripts/remove_old_war.sh
                         """
                         
