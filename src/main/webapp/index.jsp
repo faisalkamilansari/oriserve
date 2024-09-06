@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Faisal's Calculator</title>
+    <title>Faisal Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
