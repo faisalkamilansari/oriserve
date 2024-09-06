@@ -1,3 +1,34 @@
+## Configuring other dependencies
+
+### AMI
+- Created EC2 instance Installed Required dependencies.
+- Created a suitable AMI with tomcat and suitable Java version
+
+### Launch Template
+- Used AMI to Create Launch Template (Which is further used by Auto  Scaling group)
+
+### Auto Scaling Group
+- Created Auto Scaling Group with Min 2 Instances and Max 3 Instances
+- Attached Launch template made by me (Made in previous step)
+
+### Load Balancer
+- Created Load Balancer for Auto Scaling Group
+- Created target group for Load Balancer ( which is configured is Auto Scaling Group)
+- Attached that Target group to Load Balancer
+- Set policy for Listeners,rules,ports and health checks
+
+### Created Application and Deployment Group in AWS CodeDeploy
+- Created Applictaion
+- Created Deployment group
+- Attached Auto Scaling Group 
+- Choose Load Balancer type and Attached Roles and Policies
+
+### Jenkins Server
+- Installed and Configured Jenkins server on EC2
+- Configured AWS Access key and Secret access key in Jenkins Server
+- Configured AWS cli on EC2 , on which jenkins is running
+
+-----------------------------------------------------------------------------------------------------------
 # Oriserve Jenkins Pipeline Deployment
 
 This repository contains a Jenkins pipeline that automates the build, packaging, and deployment of the **Oriserve** application. The pipeline fetches the code from GitHub, builds the Java project using Maven, uploads the `.war` file to AWS S3, and deploys it using AWS CodeDeploy.
