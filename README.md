@@ -70,3 +70,8 @@ The Jenkins pipeline is defined in the `Jenkinsfile` and consists of the followi
 
 #### 3. AWS CodeDeploy Configuration:
 - Set up an AWS CodeDeploy application (oriserve-app) and a deployment group (grp-oriserve).
+
+
+
+### Image of Load Balancer
+![Directory Structure Screenshot](Load_Balancer.png)
