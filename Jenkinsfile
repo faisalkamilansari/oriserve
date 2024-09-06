@@ -28,8 +28,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
-                    // Copy the WAR file and the appspec.yml to the S3 bucket
-                    sh """
+                        // Copy the WAR file and the appspec.yml to the S3 bucket
+                        sh """
                         zip deployment-package.zip target/*.war appspec.yml scripts/start_server.sh scripts/stop_server.sh scripts/remove_old_war.sh
                         """
                         
@@ -48,11 +48,11 @@ pipeline {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
                     sh """
                     aws deploy create-deployment \
-                    --application-name oriserve-app \
-                    --deployment-group-name grp-oriserve \
-                    --s3-location bucket=faisalkamils3bucket,key=deployment-package.zip,bundleType=zip\
+                    --application-name $APP_NAME \
+                    --deployment-group-name $DEPLOY_GROUP \
+                    --s3-location bucket=$S3_BUCKET,key=deployment-package.zip,bundleType=zip \
                     --deployment-config-name CodeDeployDefault.AllAtOnce \
-                    --region us-east-1
+                    --region $REGION
                     """
                     }
                 }
